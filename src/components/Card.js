@@ -1,19 +1,16 @@
 import React from 'react';
 import { Main } from './Main.js';
 import { App } from './App.js';
-import './Card.css';
-
-
 
 function Card({onCardClick, ...props}) { 
   //console.log(props)
-  
+ 
   const handleClick = () => {
     onCardClick(props); // наши карточки при загрузке
   }
 
   return (
-          <li className="element" key={props.id}>
+          <li className="element" key={props._id}>
             <div className="element__group_image">
               <img className="element__image"
               src={props.url}
@@ -30,8 +27,7 @@ function Card({onCardClick, ...props}) {
               </div>
             </div>
           </li>
-    )
+  )
 };
-
 
 export { Card };

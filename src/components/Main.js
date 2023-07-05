@@ -1,22 +1,21 @@
 import React from 'react';
 import { api } from '../utils/Api.js';
 import { Card } from './Card.js';
-import './Main.css';
+import { App } from './App.js';
 
 function Main(props) {
   // передали обработчики с помощью новых пропсов, чтобы их использовать
-  const { onEditProfile, onAddPlace, onEditAvatar, children, onCardClick } = props;
+  const { onEditProfile, onAddPlace, onEditAvatar, cards, onCardClick } = props;
   
   // переменные состояния для профиля
   const [userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
+  const [userAvatar, setUserAvatar] = React.useState({});
 
   // добавьте эффект, вызываемый при монтировании компонента, который будет 
   // совершать запрос в API за пользовательскими данными
   // После получения ответа задавайте полученные данные в соответствующие 
   // переменные состояния  
-
   React.useEffect(() => {
     api.getUserIDInfo()
     .then(( user) => {
@@ -50,7 +49,9 @@ function Main(props) {
           <button className="profile__add-button" type="button" onClick={onAddPlace}/>
       </section>
       <ul className="elements">
-        {children}
+        {cards.map(item => (
+          <Card key={item._id} onCardClick={onCardClick} {...item}/>
+        ))}
       </ul>
     </main>
   )

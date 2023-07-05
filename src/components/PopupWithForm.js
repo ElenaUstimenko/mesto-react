@@ -1,4 +1,5 @@
-import './PopupWithForm.css';
+import React from 'react';
+import { App } from './App.js';
 
 function PopupWithForm(props) {
   // протягиваем сюда isOpen, чтобы использовать
@@ -18,7 +19,14 @@ function PopupWithForm(props) {
           className=".popup__form"
           noValidate=""
         >
-          {props.children} 
+           {props.children} 
+          <button
+              name="button"
+              type="submit"
+              className={`popup__save popup__save_${props.name}`}> 
+                {props.buttonText}
+          </button>
+         
         </form> 
       </div>
     </div>

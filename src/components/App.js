@@ -6,7 +6,6 @@ import { PopupWithForm } from './PopupWithForm.js';
 import { ImagePopup } from './ImagePopup.js';
 import { Card } from './Card.js';
 import { api } from '../utils/Api.js';
-import './App.css';
 
 function App(props) {
   // объявляем переменные состояния с исходным значением
@@ -21,6 +20,12 @@ function App(props) {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
+  // card's zoom
+  const handleCardClick = (data) => {
+  setIsImagePopupOpen(true);
+  setSelectedCard(data);
+}
+    
   // меняем аргумент функции на true, чтобы открыть попап
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
@@ -36,12 +41,7 @@ function App(props) {
 
   // Значение selectedCard должно передаваться с помощью пропса card в компонент ImagePopup, 
   // где оно будет использоваться для определения наличия CSS-класса видимости и задания адреса изображения в теге img. 
-  // card's zoom
-  const handleCardClick = (data) => {
-    setIsImagePopupOpen(true);
-    setSelectedCard(data);
-  }
-
+ 
   // закрытие попапов
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -52,7 +52,8 @@ function App(props) {
   }
 
   //закрытие попапа на Esc c useEffect
-  React.useEffect(() => {
+  // Слушатель Esc необходимо устанавливать не при монтировании компонента, а при открытии попапов.
+  /*React.useEffect(() => {
       const closePopupByEsc = (evt) => {
         if (evt.key === 'Escape') {
           closeAllPopups();
@@ -61,11 +62,12 @@ function App(props) {
     document.addEventListener('keydown', closePopupByEsc);
     return () => {
       document.removeEventListener('keydown', closePopupByEsc);
-    }
-  }, []);
+    }  
+  }, []);*/
 
-  //закрытие попапа на overlay c useEffect
-  React.useEffect(() => {
+  // закрытие попапа на overlay c useEffect
+  // Слушатель клика в оверлей необходимо устанавливать на попап, а не на документ.
+  /*React.useEffect(() => {
     const closePopupByOverlay = (evt) => {
       if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
         closeAllPopups();
@@ -75,7 +77,7 @@ function App(props) {
     return () => {
       document.removeEventListener('mousedown', closePopupByOverlay);
     }
-  }, []);
+  }, []);*/
 
   // переменная состояния для карточек
   const [cards, setCards] = React.useState([]);
@@ -84,9 +86,10 @@ function App(props) {
     
     api.getCards()
     .then((res) => {
+      
       const cardsFromApi = res.map((item) => ({
         name: item.name,
-        id: item._id,
+        _id: item._id,
         url: item.link,
         likes: item.likes.length,
     }));    
@@ -103,29 +106,24 @@ function App(props) {
         //отображаем текущее состояние
         onEditProfile={handleEditProfileClick} 
         onAddPlace={handleAddPlaceClick} 
-        onEditAvatar={handleEditAvatarClick}>
-
-        {cards.map(item => (
-          <Card key={item.id} onCardClick={handleCardClick} {...item}/>
-          
-        ))}
-
+        onEditAvatar={handleEditAvatarClick}
+        onCardClick={handleCardClick}
+        cards={cards}>
         </Main>
         <Footer />
-        <PopupWithForm name="popup_edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}> 
-        
+        <PopupWithForm name="popup_edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} 
+        onClose={closeAllPopups} buttonText={"Сохранить"}> 
           <>
             <label className="popup__field">
               <input 
                 id="name-input"
                 type="text"
                 name="name"
-                defaultValue=""
                 className="popup__input popup__input_type_name"
                 placeholder="Имя"
                 minLength={2}
                 maxLength={40}
-                required=""
+                required
             />
             <span className="name-input popup__input-error" />
             </label>
@@ -134,39 +132,30 @@ function App(props) {
                   id="profession-input"
                   type="text"
                   name="about"
-                  defaultValue=""
                   className="popup__input popup__input_type_profession"
                   placeholder="Вид деятельности"
                   minLength={2}
                   maxLength={200}
-                  required=""    
+                  required    
               />
             <span className="profession-input popup__input-error" />
             </label>
-            <button
-              name="button"
-              type="submit"
-              className="popup__save popup__save_edit-profile"
-            >
-              Сохранить
-            </button>
           </>
         </PopupWithForm>
 
-        <PopupWithForm name="popup_add-image" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
-        
+        <PopupWithForm name="popup_add-image" title="Новое место" isOpen={isAddPlacePopupOpen} 
+        onClose={closeAllPopups} buttonText={"Сохранить"}>
           <>
             <label className="popup__field">
               <input
                 id="place-input"
                 type="text"
                 name="name"
-                defaultValue=""
                 className="popup__input popup__input_type_place"
                 placeholder="Название"
                 minLength={2}
                 maxLength={30}
-                required=""
+                required
               />
               <span className="place-input popup__input-error" />
             </label>
@@ -174,61 +163,40 @@ function App(props) {
               <input
                 id="link-input"
                 name="link"
-                defaultValue=""
                 className="popup__input popup__input_type_link"
                 placeholder="Ссылка на картинку"
                 type="url"
-                required=""
+                required
               />
             <span className="link-input popup__input-error" />
             </label>
-            <button
-            name="button"
-            type="submit"
-            className="popup__save popup__save_add-image"
-            >
-              Сохранить
-            </button>
             </>
         </PopupWithForm>
 
-        <PopupWithForm name="popup_update-avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
+        <PopupWithForm name="popup_update-avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} 
+        onClose={closeAllPopups} buttonText={"Сохранить"}>
           <>
             <label className="popup__field">
               <input
                 id="link-inputAvatar"
                 name="avatar"
-                defaultValue=""
                 className="popup__input popup__input_type_link"
                 placeholder="Ссылка на картинку"
                 type="url"
-                required=""
+                required
               />
               <span className="link-input popup__input-error" />
             </label>
-            <button
-              name="button"
-              type="submit"
-              className="popup__save popup__save_update-avatar"
-            >
-              Сохранить
-            </button>
           </>
         </PopupWithForm>
 
-        <PopupWithForm name="popup_confirm-delete" title="Вы уверены?">
+        <PopupWithForm name="popup_confirm-delete" title="Вы уверены?" buttonText={"Да"}>
           <>
-            <button
-              name="button"
-              type="submit"
-              className="popup__save popup__save_confirm-delete"
-            >
-              Да
-            </button>
           </>
         </PopupWithForm>
 
         <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
+        
       </div>
   )
 };

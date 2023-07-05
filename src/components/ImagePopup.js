@@ -1,12 +1,8 @@
 import React from 'react';
 import { Card } from './Card.js';
-import './ImagePopup.css';
 
 function ImagePopup({isOpen, onClose, ...props}) {
   // console.log(props)
-  
-  // const { isOpen } = props;
-  // const { onClose } = props;
 
   return (
     <div className={`popup popup_open-image ${isOpen ?'popup_opened':''}`}>
