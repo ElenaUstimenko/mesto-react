@@ -5,6 +5,8 @@
 
 Mesto: интерактивная страница, куда можно добавлять фотографии, удалять их и ставить лайки.
 Также можно изменить данные и фото своего профиля.
+
+https://elenaustimenko.github.io/mesto-react/index.html
 ______________
 
 # **Mesto-React**  
@@ -14,3 +16,5 @@ The project was built using Webpack.
 
 Mesto: an interactive page where you can add photos, delete them and like them.
 You can also change your profile information and photo.
+
+https://elenaustimenko.github.io/mesto-react/index.html
