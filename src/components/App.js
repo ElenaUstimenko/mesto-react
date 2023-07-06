@@ -18,55 +18,67 @@ function App(props) {
   
   // card's zoom 
   const [selectedCard, setSelectedCard] = React.useState({});
-  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-
-  // card's zoom
-  const handleCardClick = (data) => {
-  setIsImagePopupOpen(true);
-  setSelectedCard(data);
-}
+  // const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
     
   // меняем аргумент функции на true, чтобы открыть попап
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
-  }
+  };
 
   const handleAddPlaceClick = () => {
     setisAddPlacePopupOpen(true);
-  }
+  };
 
   const handleEditAvatarClick = () => {
     setisEditAvatarPopupOpen(true);
-  }
+  };
 
   // Значение selectedCard должно передаваться с помощью пропса card в компонент ImagePopup, 
   // где оно будет использоваться для определения наличия CSS-класса видимости и задания адреса изображения в теге img. 
- 
+  // card's zoom
+  const handleCardClick = (data) => {
+    document.querySelector('.popup_open-image').classList.add('popup_opened');
+    // setIsImagePopupOpen(true);
+    setSelectedCard(data);
+  };
+
+
   // закрытие попапов
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setisAddPlacePopupOpen(false);
     setisEditAvatarPopupOpen(false);
-    setIsImagePopupOpen(false);
+    document.querySelector('.popup_open-image').classList.remove('popup_opened');
+    // setIsImagePopupOpen(false);
     setSelectedCard({});
-  }
+  };
 
-  //закрытие попапа на Esc c useEffect
+  // закрытие попапа на Esc c useEffect
   // Слушатель Esc необходимо устанавливать не при монтировании компонента, а при открытии попапов.
-  /*React.useEffect(() => {
+  const isAnyPopupOpen = React.useMemo(() => {
+    return (
+      isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard
+    );
+  }, [
+    isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, selectedCard
+  ]);
+
+  React.useEffect(() => {
+    if(isAnyPopupOpen) {
       const closePopupByEsc = (evt) => {
         if (evt.key === 'Escape') {
           closeAllPopups();
-        }
-    } 
-    document.addEventListener('keydown', closePopupByEsc);
-    return () => {
-      document.removeEventListener('keydown', closePopupByEsc);
-    }  
-  }, []);*/
+          }
+        } 
+      document.addEventListener('keydown', closePopupByEsc);
+      return () => {
+        document.removeEventListener('keydown', closePopupByEsc);  
+      }
+    }      
+  }, [isAnyPopupOpen]);
 
   // закрытие попапа на overlay c useEffect
-  // Слушатель клика в оверлей необходимо устанавливать на попап, а не на документ.
+  // Слушатель клика в оверлей необходимо устанавливать на попап, а не на документ => так не работает
   /*React.useEffect(() => {
     const closePopupByOverlay = (evt) => {
       if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
@@ -75,14 +87,15 @@ function App(props) {
   } 
     document.addEventListener('mousedown', closePopupByOverlay);
     return () => {
-      document.removeEventListener('mousedown', closePopupByOverlay);
+       document.removeEventListener('mousedown', closePopupByOverlay);
     }
   }, []);*/
 
   // переменная состояния для карточек
   const [cards, setCards] = React.useState([]);
   
-  React.useEffect((item) => {
+  // подход с преобразованием данных карточки
+ /* React.useEffect((item) => {
     
     api.getCards()
     .then((res) => {
@@ -96,8 +109,17 @@ function App(props) {
     // cards
     setCards(cardsFromApi);
     }).catch((err) => console.log(`catch: ${err}`))
-  }, []);
+  }, []);*/
   
+  // вариант 2 => сохраняем в стэйт весь массив, который получаем с сервера
+  React.useEffect(() => {
+    
+    api.getCards()
+   .then((cards) => { 
+      setCards(cards);
+    }).catch((err) => console.log(`catch: ${err}`))
+  }, []);
+
 
   return (
       <div className="page">
@@ -195,7 +217,7 @@ function App(props) {
           </>
         </PopupWithForm>
 
-        <ImagePopup isOpen={isImagePopupOpen} onClose={closeAllPopups} card={selectedCard} />
+        <ImagePopup name="popup_open-image" /*isOpen={isImagePopupOpen}*/ onClose={closeAllPopups} card={selectedCard} />
         
       </div>
   )

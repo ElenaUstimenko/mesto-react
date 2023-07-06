@@ -18,7 +18,7 @@ function Main(props) {
   // переменные состояния  
   React.useEffect(() => {
     api.getUserIDInfo()
-    .then(( user) => {
+    .then((user) => {
 
     // ID information
     setUserName(user.name)
@@ -50,7 +50,7 @@ function Main(props) {
       </section>
       <ul className="elements">
         {cards.map(item => (
-          <Card key={item._id} onCardClick={onCardClick} {...item}/>
+          <Card key={item._id} card={item} onCardClick={onCardClick} {...item}/>
         ))}
       </ul>
     </main>
