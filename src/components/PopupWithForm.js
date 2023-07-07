@@ -2,7 +2,7 @@ import React from 'react';
 import { App } from './App.js';
 
 function PopupWithForm(props) {
-  // протягиваем сюда isOpen, чтобы использовать
+  // протягиваем сюда isOpen, onClose, чтобы использовать
   const { isOpen } = props;
   const { onClose } = props;
 

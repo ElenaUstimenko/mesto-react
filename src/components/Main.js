@@ -8,9 +8,9 @@ function Main(props) {
   const { onEditProfile, onAddPlace, onEditAvatar, cards, onCardClick } = props;
   
   // переменные состояния для профиля
-  const [userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState({});
+  const [userName, setUserName] = React.useState('');
+  const [userDescription, setUserDescription] = React.useState('');
+  const [userAvatar, setUserAvatar] = React.useState('');
 
   // добавьте эффект, вызываемый при монтировании компонента, который будет 
   // совершать запрос в API за пользовательскими данными

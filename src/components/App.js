@@ -17,8 +17,8 @@ function App(props) {
   const [isEditAvatarPopupOpen, setisEditAvatarPopupOpen] = React.useState(false);
   
   // card's zoom 
-  const [selectedCard, setSelectedCard] = React.useState({});
-  // const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
+  const [selectedCard, setSelectedCard] = React.useState(null);
+  // const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false); вариант 1
     
   // меняем аргумент функции на true, чтобы открыть попап
   const handleEditProfileClick = () => {
@@ -34,23 +34,25 @@ function App(props) {
   };
 
   // Значение selectedCard должно передаваться с помощью пропса card в компонент ImagePopup, 
-  // где оно будет использоваться для определения наличия CSS-класса видимости и задания адреса изображения в теге img. 
+  // где оно будет использоваться для определения наличия CSS-класса видимости и задания 
+  // адреса изображения в теге img
+  
   // card's zoom
   const handleCardClick = (data) => {
-    document.querySelector('.popup_open-image').classList.add('popup_opened');
-    // setIsImagePopupOpen(true);
+    // document.querySelector('.popup_open-image').classList.add('popup_opened'); вариант 2
+    // setIsImagePopupOpen(true); вариант 1
     setSelectedCard(data);
   };
-
+  // console.log(selectedCard)
 
   // закрытие попапов
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setisAddPlacePopupOpen(false);
     setisEditAvatarPopupOpen(false);
-    document.querySelector('.popup_open-image').classList.remove('popup_opened');
-    // setIsImagePopupOpen(false);
-    setSelectedCard({});
+    // document.querySelector('.popup_open-image').classList.remove('popup_opened'); вариант 2
+    // setIsImagePopupOpen(false); вариант 1
+    setSelectedCard(null);
   };
 
   // закрытие попапа на Esc c useEffect
@@ -59,9 +61,7 @@ function App(props) {
     return (
       isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard
     );
-  }, [
-    isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, selectedCard
-  ]);
+  }, [ isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, selectedCard ]);
 
   React.useEffect(() => {
     if(isAnyPopupOpen) {
@@ -94,7 +94,7 @@ function App(props) {
   // переменная состояния для карточек
   const [cards, setCards] = React.useState([]);
   
-  // подход с преобразованием данных карточки
+  // вариант 1 => подход с преобразованием данных карточки
  /* React.useEffect((item) => {
     
     api.getCards()
@@ -217,8 +217,8 @@ function App(props) {
           </>
         </PopupWithForm>
 
-        <ImagePopup name="popup_open-image" /*isOpen={isImagePopupOpen}*/ onClose={closeAllPopups} card={selectedCard} />
-        
+        <ImagePopup name="popup_open-image" /*isOpen={isImagePopupOpen} вариант 1*/ onClose={closeAllPopups} card={selectedCard}/>
+  
       </div>
   )
 };
