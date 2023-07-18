@@ -3,8 +3,8 @@ import { App } from './App.js';
 
 function PopupWithForm(props) {
   // протягиваем сюда isOpen, onClose, чтобы использовать
-  const { isOpen } = props;
-  const { onClose } = props;
+  const { isOpen, onClose, onSubmit } = props;
+  
 
   // если попап isOpen то добавляем класс popup_opened
   return (
@@ -18,6 +18,7 @@ function PopupWithForm(props) {
           name={`${props.name}`}
           className=".popup__form"
           noValidate=""
+          onSubmit={onSubmit}
         >
            {props.children} 
           <button
@@ -26,7 +27,6 @@ function PopupWithForm(props) {
               className={`popup__save popup__save_${props.name}`}> 
                 {props.buttonText}
           </button>
-         
         </form> 
       </div>
     </div>
