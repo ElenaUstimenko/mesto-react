@@ -28,7 +28,7 @@ function EditProfilePopup(props) {
   React.useEffect(() => {
     setName(currentUser?.name ??'');
     setDescription(currentUser?.about ??'');
-  }, [currentUser]);
+  }, [currentUser, isOpen]);
 
   function handleSubmit(evt) {
     // запрещаем браузеру переходить по адресу формы
@@ -41,7 +41,6 @@ function EditProfilePopup(props) {
     // значение элемента «привязывается» к значению стейта
     <PopupWithForm name="popup_edit-profile" title="Редактировать профиль" isOpen={isOpen} 
         onClose={onClose} buttonText={"Сохранить"} onSubmit={handleSubmit}> 
-          <>
             <label className="popup__field">
               <input 
                 id="name-input"
@@ -72,7 +71,6 @@ function EditProfilePopup(props) {
               />
             <span className="profession-input popup__input-error" />
             </label>
-          </>
         </PopupWithForm>
   )
 };

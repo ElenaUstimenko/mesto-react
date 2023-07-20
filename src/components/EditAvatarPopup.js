@@ -25,7 +25,6 @@ const currentUser = React.useContext(CurrentUserContext);
   return(
     <PopupWithForm name="popup_update-avatar" title="Обновить аватар" isOpen={isOpen} 
         onClose={onClose} buttonText={"Сохранить"} onSubmit={handleSubmit}>
-          <>
             <label className="popup__field">
               <input
                 id="link-inputAvatar"
@@ -38,7 +37,6 @@ const currentUser = React.useContext(CurrentUserContext);
               />
               <span className="link-input popup__input-error" />
             </label>
-          </>
         </PopupWithForm>
   )
 }

@@ -1,10 +1,13 @@
 import React from 'react';
 import { App } from './App.js';
+import { usePopupClose } from '../hooks/usePopupClose.js';
 
 function PopupWithForm(props) {
   // протягиваем сюда isOpen, onClose, чтобы использовать
   const { isOpen, onClose, onSubmit } = props;
-  
+
+  // используем в любом компоненте (попапе), которому нужно установить эти обработчики
+  usePopupClose(isOpen, onClose);
 
   // если попап isOpen то добавляем класс popup_opened
   return (
@@ -14,10 +17,9 @@ function PopupWithForm(props) {
         <h3 className="popup__header" >{props.title}</h3>
         <form
           action="#"
-          method="get"
           name={`${props.name}`}
           className=".popup__form"
-          noValidate=""
+          // noValidate="" вернём, когда будет своя валидация
           onSubmit={onSubmit}
         >
            {props.children} 

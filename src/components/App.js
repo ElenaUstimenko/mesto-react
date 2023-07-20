@@ -10,6 +10,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import { EditProfilePopup } from './EditProfilePopup.js';
 import { EditAvatarPopup } from './EditAvatarPopup.js';
 import { AddPlacePopup } from './AddPlacePopup.js';
+import { usePopupClose } from '../hooks/usePopupClose.js';
 
 function App(props) {
   /////////////////////////////////////////////////////////////////////////////////////////////////////// 3 popups
@@ -51,7 +52,7 @@ function App(props) {
   // console.log(selectedCard)
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// all popups
-  
+
   // закрытие попапов
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -60,9 +61,9 @@ function App(props) {
     setSelectedCard(null);
   };
 
-  // закрытие попапа на Esc c useEffect
-  // Слушатель Esc необходимо устанавливать не при монтировании компонента, а при открытии попапов.
-  const isAnyPopupOpen = React.useMemo(() => {
+  // вариант 1 - закрытие попапа на Esc c useEffect
+  // слушатель Esc необходимо устанавливать не при монтировании компонента, а при открытии попапов
+  /*const isAnyPopupOpen = React.useMemo(() => {
     return (
       isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || selectedCard
     );
@@ -80,7 +81,7 @@ function App(props) {
         document.removeEventListener('keydown', closePopupByEsc);  
       }
     }      
-  }, [isAnyPopupOpen]);
+  }, [isAnyPopupOpen]);*/
 
   // закрытие попапа на overlay c useEffect
   // Слушатель клика в оверлей необходимо устанавливать на попап, а не на документ => так не работает
@@ -124,13 +125,13 @@ function App(props) {
     api.getCards()
    .then((cards) => { 
       setCards(cards);
-    }).catch((err) => console.log(`catch: ${err}`))
+    }).catch(console.error)
   }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// user's context
   
   // стейт, отвечающий за данные пользователя
-  const [currentUser, setCurrentUser] = React.useState('');
+  const [currentUser, setCurrentUser] = React.useState({});
   // эффект, вызываемый при монтировании компонента, который будет 
   // совершать запрос в API за пользовательскими данными
   React.useEffect(() => {
@@ -144,7 +145,7 @@ function App(props) {
       avatar: currentUser.avatar,
       _id: currentUser._id,
     })
-    }).catch((err) => console.log(`catch: ${err}`))
+    }).catch(console.error)
     }, []);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// likes
@@ -160,14 +161,14 @@ function App(props) {
         // формируем новый массив на основе имеющегося, подставляя в него новую карточку
         state.map((c) => (c._id === card._id ? newCard : c))
       );
-      }).catch((err) => console.log(`catch: ${err}`))
+      }).catch(console.error)
     } else {
       api.deleteLike(card._id)
       .then((newCard) => { 
         setCards((state) => 
         state.map((c) => (c._id === card._id ? newCard : c))
       );
-      }).catch((err) => console.log(`catch: ${err}`))
+      }).catch(console.error)
     }
   };
   
@@ -179,19 +180,20 @@ function App(props) {
       // используя методы массива, создаем новый массив карточек, 
       // где не будет карточки, которую мы только что удалили
       setCards((cards) => cards.filter((c) => c._id !== cardID)); 
-    }).catch((err) => console.log(`catch: ${err}`))
+    }).catch(console.error)
   };
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// edit profile
   
   // после завершения запроса обновляем стейт currentUser из полученных данных 
   const handleUpdateUser = ({name, about}) => {
+   
     api.userInformation({name, about})
     .then((newProfile) => {
       setCurrentUser(newProfile)
        closeAllPopups();
-    }).catch((err) => console.log(`catch: ${err}`))
-  };
+    }).catch(console.error)
+  }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// edit avatar
   
@@ -200,7 +202,7 @@ function App(props) {
     .then((newAvatar) => {
       setCurrentUser(newAvatar)
       closeAllPopups();
-    }).catch((err) => console.log(`catch: ${err}`))
+    }).catch(console.error)
   };
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////// card
@@ -211,8 +213,8 @@ function App(props) {
     .then((newCard)=> {
       setCards([newCard, ...cards]);
       closeAllPopups();
-      console.log(data)
-    }).catch((err) => console.log(`catch: ${err}`))
+      // console.log(data)
+    }).catch(console.error)
   };
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,13 +244,9 @@ function App(props) {
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} 
         onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
           
-        <PopupWithForm name="popup_confirm-delete" title="Вы уверены?" buttonText={"Да"}>
-          <>
-          </>
-        </PopupWithForm>
-
-        <ImagePopup name="popup_open-image" onClose={closeAllPopups} card={selectedCard}/> 
-        
+        <PopupWithForm name="popup_confirm-delete" title="Вы уверены?" buttonText={"Да"} />
+         
+        <ImagePopup name="popup_open-image" onClose={closeAllPopups} card={selectedCard} /> 
       </div>
     </CurrentUserContext.Provider>
   )

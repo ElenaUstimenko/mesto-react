@@ -35,7 +35,7 @@ function Card({onCardClick, onCardLike, onCardDelete, ...props}) {
   `${isOwn ? 'element__button_delete' : ' '}`;
   
   return (
-          <li className="element" key={props._id}>
+          <li className="element">
             <div className="element__group_image">
               <img className="element__image"
               src={props.link}

@@ -4,12 +4,13 @@ import { App } from './App.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import { PopupWithForm } from './PopupWithForm.js';
 
+
 function AddPlacePopup(props) {
   const { isOpen, onClose } = props;
 
   // подписываемся на CurrentUserContext и получаем значение контекста
   const currentUser = React.useContext(CurrentUserContext); 
-
+ 
   // cтейт, в котором содержится значение инпута
   const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
@@ -30,6 +31,13 @@ function AddPlacePopup(props) {
     setLink(link);
   }, []);
 
+  // очищение инпутов после успешного добавления карточки,  для того чтобы пользователь мог сразу же 
+  // еще раз добавить что-то новое и ему не пришлось бы очищать инпуты вручную перед этим
+  React.useEffect(() => {
+    setName('');
+    setLink('');
+  }, [isOpen]);
+
   const handleSubmit = (evt) => {
     // запрещаем браузеру переходить по адресу формы
     evt.preventDefault();
@@ -40,7 +48,6 @@ function AddPlacePopup(props) {
   return (
   <PopupWithForm name="popup_add-image" title="Новое место" isOpen={isOpen} 
   onClose={onClose} buttonText={"Сохранить"} onSubmit={handleSubmit} >
-    <>
       <label className="popup__field">
         <input
           id="place-input"
@@ -69,7 +76,6 @@ function AddPlacePopup(props) {
         />
         <span className="link-input popup__input-error" />
       </label>
-    </>    
   </PopupWithForm>
 )};
 

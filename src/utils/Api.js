@@ -2,7 +2,7 @@ import React from 'react';
 
 class Api {
   constructor(config) {
-    this._url = config.url;
+    this._url = config.baseUrl;
     this._headers = config.headers;
     this.authorization = config.headers.authorization; // token
   }
@@ -25,10 +25,11 @@ class Api {
   getCards() {
     return fetch(`${this._url}/cards`, {
       method: "GET",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      }
+      },*/
+      headers: this._headers,
     })
     .then(this._handleResponse)
   };
@@ -37,10 +38,11 @@ class Api {
   getUserIDInfo() {
     return fetch(`${this._url}/users/me`, {
       method: "GET",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      },
+      },*/
+      headers: this._headers,
     })
     .then(this._handleResponse)
   };
@@ -49,10 +51,11 @@ class Api {
   newCardData({name, link}) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      },
+      },*/
+      headers: this._headers,
       body: JSON.stringify({
         name: name,
         link: link,
@@ -64,10 +67,11 @@ class Api {
   photoOfAvatar(avatar) {
   return fetch(`${this._url}/users/me/avatar`, {
     method: "PATCH",
-    headers: {
-      authorization: this.authorization,
-      'Content-type': 'application/json'
-    },
+    /*headers: {
+        authorization: this.authorization,
+        'Content-type': 'application/json'
+      },*/
+    headers: this._headers,
     body: JSON.stringify(avatar)
     }).then(this._handleResponse)
   };
@@ -76,10 +80,11 @@ class Api {
   userInformation({ name, about }) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      },
+      },*/
+      headers: this._headers,
       body: JSON.stringify({
         name: name,
         about: about,
@@ -91,20 +96,22 @@ class Api {
   addLike(cardID) {
     return fetch(`${this._url}/cards/likes/${cardID}`, {
       method: "PUT",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      },
+      },*/
+      headers: this._headers,
     }).then(this._handleResponse)
   };
 
   deleteLike(cardID) {
     return fetch(`${this._url}/cards/likes/${cardID}`, {
       method: "DELETE",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      },
+      },*/
+      headers: this._headers,
     }).then(this._handleResponse)
   };
 
@@ -112,18 +119,20 @@ class Api {
   deleteCard(cardID) {
     return fetch(`${this._url}/cards/${cardID}`, {
       method: "DELETE",
-      headers: {
+      /*headers: {
         authorization: this.authorization,
         'Content-type': 'application/json'
-      }
+      },*/
+      headers: this._headers,
     })
   .then(this._handleResponse)
 };
 };
 
 export const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-68',
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-68',
   headers: {
-    authorization: 'b6c2ceaf-2bff-4edb-9d30-ddef75ef1cb1'
+    authorization: 'b6c2ceaf-2bff-4edb-9d30-ddef75ef1cb1',
+    'Content-type': 'application/json'
   },
 });
